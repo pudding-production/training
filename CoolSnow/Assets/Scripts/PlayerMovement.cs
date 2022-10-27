@@ -1,13 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializedField] float movement;
-    [SerializedField] float movementSpeed;
+   [SerializeField] float movement;
+   [SerializeField] float movementSpeed = 0.1f;
 
-        // Start is called before the first frame update
     void Start()
     {
         
@@ -16,6 +16,11 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        movement = 
+        movement = Input.GetAxisRaw("Horizontal") * movementSpeed;
+    }
+
+    private void FixedUpdate()
+    {
+        transform.Translate(movement, 0, 0);
     }
 }
