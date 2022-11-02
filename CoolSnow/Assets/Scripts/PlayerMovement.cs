@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,22 +6,54 @@ using UnityEngine.Animations;
 
 public class PlayerMovement : MonoBehaviour
 {
-   [SerializeField] float movement;
-   [SerializeField] float movementSpeed = 0.1f;
+    float rotation;
+    [SerializeField] float rotationPower = 12f;
+    [SerializeField] float boostSpeed = 30f;
+    [SerializeField] float baseSpeed = 18f;
+
+    SurfaceEffector2D surfaceEffector;
+
+    Rigidbody2D rb;
+
+    bool canMove = true;
 
     void Start()
     {
-        
+        rb = GetComponent<Rigidbody2D>();
+        surfaceEffector = FindObjectOfType<SurfaceEffector2D>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        movement = Input.GetAxisRaw("Horizontal") * movementSpeed;
+        rotation = Input.GetAxisRaw("Horizontal") * -rotationPower;
+        RespondBoost();
     }
 
-    private void FixedUpdate()
+    void RespondBoost()
     {
-        transform.Translate(movement, 0, 0);
+        if (Input.GetKey("space"))
+        {
+            Debug.Log("Speed");
+            surfaceEffector.speed = boostSpeed;
+        }
+        else
+        {
+            surfaceEffector.speed = baseSpeed;
+        }
+
+    }
+
+    void FixedUpdate()
+    {
+        if (canMove)
+        {
+            rb.AddTorque(rotation);
+        }
+    }
+
+    public void DisableControls()
+    {
+        canMove = false;
     }
 }
